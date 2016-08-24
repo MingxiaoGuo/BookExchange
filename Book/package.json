@@ -1,0 +1,27 @@
+{
+  "name": "Book",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "nodemon ./bin/www"
+  },
+  "dependencies": {
+    "angular": "^1.5.8",
+    "body-parser": "~1.15.1",
+    "bootstrap-select": "*",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.2.0",
+    "ejs": "*",
+    "express": "~4.13.4",
+    "express-session": "*",
+    "http": "*",
+    "mongoose": "*",
+    "morgan": "~1.7.0",
+    "multer": "^1.2.0",
+    "mysql": "*",
+    "ng-file-upload": "^12.0.4",
+    "password-hash": "^1.2.2",
+    "request": "*",
+    "serve-favicon": "~2.3.0"
+  }
+}

@@ -1,0 +1,46 @@
+<nav class="navbar navbar-default navbar-static-top">
+	<div class="container-fluid">
+		<ul class="nav navbar-nav navbar-left" style="line-height:45px;">
+			<li>
+				<img src="../images/brand1.png" style="width:30px;margin-top:10px;margin-right:8px">
+			</li>
+			<li>
+				<a class="navbar-brand" href="/">Book Exchange</a>
+			</li>
+		</ul>
+
+		<ul class="nav navbar-nav navbar-right" style="line-height: 45px; margin-right: 20px">
+			<li>
+<!--				<form class="navbar-form" role="search" action="/search" method="post">
+					<div class="form-group">
+						<input type="text" class="form-control" placeholder="Search Book" id="search_term">
+						<button type="submit" class="btn btn-default">GO!</button>
+					</div>
+				</form>-->
+
+				<form class="navbar-form" role="search" action="/search" method="post">
+					<div class="input-group">
+						<input type="text" class="form-control" placeholder="Search Book" name="search_term" id="search_term">
+						<div class="input-group-btn">
+							<button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+						</div>
+					</div>
+				</form>
+			</li>
+			<!--第二部分（登录和注册完成）-->
+			<% if (typeof(userInfo) != 'undefined') { %>
+				<li>
+					<a href="/profile"><span class="glyphicon glyphicon-user"></span>&nbsp;<%= userInfo.user_name %></a>
+				</li>
+			<% } else {%>
+			<!--第一部分-->
+				<li>
+					<a href="/login"><button class="btn btn-default">Sign In</button></a>
+				</li>
+				<li>
+					<a href="/register"><button class="btn btn-default">Sign Up</button></a>
+				</li>
+			<% } %>
+		</ul>
+	</div><!-- /.container-fluid -->
+</nav>

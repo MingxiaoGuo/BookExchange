@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <% include ../partial/header.ejs %>
+</head>
+<body>
+  <% include ../partial/nav.ejs %>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>#</th>
+      <th>Book Title</th>
+      <th>Owner Name</th>
+      <th>Condition</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% for (var i = 0; i < searchResult.length; i++) { %>
+    <tr>
+      <th scope="row"><%= i + 1 %></th>
+      <td><a href="/bookInfo/<%= searchResult[i].book_id %>"><%= searchResult[i].book_title %></a> </td>
+      <td><%= searchResult[i].user_name %></td>
+      <% if (searchResult[i].book_condition == 'Brand New' || searchResult[i].book_condition == 'Excellent') { %>
+        <td><span class="label label-success">
+      <% } else { %>
+        <td><span class="label label-warning">
+      <% } %>
+      <%= searchResult[i].book_condition %></span></td>
+
+    </tr>
+    <% } %>
+    </tbody>
+  </table>
+</body>
+</html>

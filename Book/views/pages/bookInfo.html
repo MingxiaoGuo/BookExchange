@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <% include ../partial/header.ejs %>
+</head>
+<body>
+  <% include ../partial/nav.ejs %>
+  <div class="container col-lg-6 col-lg-offset-3">
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        Book Information
+      </div>
+      <div class="panel-body" id="bookInfo">
+        <div class="row">
+          <dl class="dl-horizontal">
+            <dt>Book Title: </dt>
+            <dd><%= data.book_title %></dd>
+          </dl>
+
+          <dl class="dl-horizontal">
+            <dt>Book Condition: </dt>
+            <dd><span class="label label-success"><%= data.book_condition %></span></dd>
+          </dl>
+
+          <dl class="dl-horizontal">
+            <dt>Owner: </dt>
+            <dd><%= data.user_name %></a></dd>
+          </dl>
+
+          <dl class="dl-horizontal">
+            <dt>Book Image: </dt>
+            <dd><img src="<%= data.book_path %>" class="img-thumbnail col-lg-10"></dd>
+          </dl>
+        </div>
+
+        <div class="row hidden" id="ownerInfo">
+          <dl class="dl-horizontal">
+            <dt>Owner Email: </dt>
+            <dd><%= data.user_email %></dd>
+          </dl>
+
+          <dl class="dl-horizontal">
+            <dt>Owner's City: </dt>
+            <dd><%= data.city %></dd>
+          </dl>
+          <dl class="dl-horizontal">
+            <dt><%= data.user_name %>'s Wish List: </dt>
+            <dd class="col-lg-6">
+              <table class="table table-bordered">
+                <tbody>
+                <% for (var i = 0; i < data.wishBookList.length; i++) { %>
+                <tr>
+                  <td>
+                    <%= data.wishBookList[i].book_title %>
+                  </td>
+                </tr>
+                <% } %>
+                </tbody>
+              </table>
+            </dd>
+          </dl>
+
+        </div>
+
+        <% if(typeof(userInfo) == 'undefined') { %>
+        <button class="btn btn-info" id="btnShowLogin">Sign In To See Contact Info</button>
+        <% } else { %>
+        <button class="btn btn-primary" id="btnShowUserInfo">Show User Info</button>
+        <% } %>
+      </div>
+    </div>
+  </div>
+<!-- ==========================================Modal====================================================   -->
+  <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times-circle" aria-hidden="true"></i>
+          </button>
+          <h4 class="modal-title">Sign In!</h4>
+        </div>
+        <div class="modal-body">
+            <div id="errBlock" class="alert alert-danger hidden" role="alert">
+              <button id="errCloseButton" type="button" class="close">
+                <span aria-hidden="true">&times;</span>
+                <span class="sr-only">Close</span>
+              </button>
+              <p id="errMessage"></p>
+            </div>
+            <form id="loginForm" action="/login" method="post">
+              <div id="email-form-group" class="form-group">
+                <label>Email</label>
+                <input type="email" required class="form-control" id="loginEmail" placeholder="Email" />
+              </div>
+              <div id="password-form-group" class="form-group">
+                <label>Password</label>
+                <input type="password" required class="form-control" id="loginPwd" placeholder="Password" />
+              </div>
+              <div id="submit-form-group" class="form-group" align="center">
+                <button id="btnLogin" type="submit" class="btn btn-primary">Sign In</button>
+              </div>
+              <div class="form-group" align="center">
+                <a href="/register" class="btn btn-info">Don't have an account? Join Now!</a>
+              </div>
+            </form>
+        </div>
+      </div>
+    </div>
+  </div><!-- Login Modal end -->
+
+</body>
+
+<script>
+  $(document).ready(function () {
+
+    $('#btnShowUserInfo').on('click', function () {
+      $(this).addClass('hidden');
+      $('#ownerInfo').removeClass('hidden');
+    });
+
+    $('#btnShowLogin').on('click', function () {
+      $('#loginModal').modal('show');
+    });
+
+    $('#btnLogin').on('click', function () {
+      var email = $('#loginEmail').val();
+      var password = $('#loginPwd').val();
+
+      var loginData = {
+        user_email : email,
+        user_password : password
+      };
+      console.log(loginData)
+      $.post('/login', loginData, function (res) {
+        if (!res.isDone) {
+          $('#errMessage').empty().append(res.msg).parents('#errBlock').removeClass('hidden');
+        } else {
+          console.log(res.msg);
+          window.location.reload();
+        }
+      });
+    });
+  });
+
+</script>
+
+</html>

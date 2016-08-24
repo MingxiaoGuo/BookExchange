@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% include ../partial/header.ejs %>
+  <style>
+    .input-group {
+      margin-bottom: 10px;
+    }
+  </style>
+  <title>Book Detail</title>
+</head>
+<body ng-app="App">
+  <% include ../partial/nav.ejs %>
+  <div ng-controller="AppController" class="container">
+    <div class="row col-lg-6 col-lg-offset-3">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          Book Detail
+        </div>
+        <form ng-submit="submit()" id="addImageForm">
+          <div class="panel-body">
+            <div class="input-group col-lg-8">
+              <label class="input-group">Title</label>
+              <p class="hidden" id="book_id" name="<%= bookInfo.book_id %>"></p>
+              <input type="text" class="form-control" id="title" value="<%= bookInfo.book_title %>" disabled>
+            </div>
+            <div class="input-group col-lg-8">
+              <label class="input-group">Condition</label>
+              <input type="text" class="form-control" id="condition" value="<%= bookInfo.book_condition %>" disabled>
+            </div>
+            <div>
+              <label>Book Cover</label>
+              <div class="panel panel-default">
+                <img src="<%= bookInfo.book_path %>" class="img-thumbnail" ng-model="book.file">
+                <div class="hidden" id="chooseFile">
+                  <p class="hidden" id="bookID" data-id="<%= bookInfo.book_mongo_id %>" ></p>
+                  <input class="col-lg-6" id="image" type="file" ng-model="book.file" >
+                  <button>Upload Image</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="panel-footer" style="text-align: center">
+          <a class="btn btn-primary" id="btnEdit">Edit</a>
+          <a class="btn btn-warning" id="btnBack">Back to List</a>
+          <button class="btn btn-primary hidden" id="btnSubmit" >Submit</button>
+          <button class="btn btn-warning hidden" id="btnCancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+  $(document).ready(function () {
+    $('#btnEdit').on('click', function () {
+      $(this).addClass('hidden');
+      $('#btnBack').addClass('hidden');
+      $('#btnSubmit').removeClass('hidden');
+      $('#chooseFile').removeClass('hidden');
+      $('#btnCancel').removeClass('hidden');
+      $("#condition").prop('disabled', false);
+      $("#title").prop('disabled', false);
+    });
+
+    $('#btnCancel').on('click', function () {
+      $(this).addClass('hidden');
+      $('#btnSubmit').addClass('hidden');
+      $('#chooseFile').addClass('hidden');
+      $('#btnEdit').removeClass('hidden');
+      $('#btnBack').removeClass('hidden');
+      $("#condition").prop('disabled', true);
+      $("#title").prop('disabled', true);
+    });
+
+    $('#btnBack').on('click', function () {
+      window.history.back();
+    });
+
+    $('#btnSubmit').on('click', function () {
+      var bookInfo = {
+        book_id : $('#book_id').attr('name'),
+        book_title : $('#title').val(),
+        book_condition: $('#condition').val()
+      };
+      console.log(bookInfo);
+      $.post('/bookDetail/updateInfo', bookInfo, function (result) {
+        console.log(result);
+        if (result.isDone) {
+          alert("book information is updated!");
+          window.location.reload();
+        }
+      });
+    });
+  });
+
+
+  angular.module('App', [])
+          .controller('AppController', function($scope, $http){
+
+            $scope.book = {};
+
+            $scope.submit = function() {
+              var book_id = angular.element('#bookID').data("id");
+              console.log(book_id);
+
+              var formData = new FormData;
+              formData.append("book_id", book_id);
+              // get the file
+              var file = $('#image')[0].files[0];
+              console.log(file);
+              formData.append('image', file);
+              console.log(formData);
+
+              // post data
+              $http.put('http://localhost:3000/bookDetail/updateImage', formData, {
+                transformRequest : angular.identity,
+                headers : {
+                  'Content-Type' : undefined
+                }
+              }).then(function(res){
+                console.log(res);
+                alert("image uploaded!");
+                window.location.reload();
+                //$scope.item = res.data;
+              });
+            }
+          })
+</script>
+</html>
